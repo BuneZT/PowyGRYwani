@@ -3,9 +3,6 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import DashboardLayout from "@/layout/DashboardLayout";
 import AuthLayout from "@/layout/AuthLayout";
 
-import Profile from "../views/UserProfile.vue";
-import ProfileEdit from "../views/UserProfileEdit.vue";
-
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 
@@ -19,22 +16,15 @@ import Search from "../views/SearchPage.vue";
 import Series from "../views/SeriesProfile.vue";
 import SeriesEdit from "../views/SeriesEdit.vue";
 
+import profile from "./routes/profile";
+
 const routes = [
   {
     path: "/",
     redirect: "/search",
     component: DashboardLayout,
     children: [
-      {
-        path: "/profile/:id",
-        name: "profile",
-        components: { default: Profile },
-      },
-      {
-        path: "/profileEdit/:id",
-        name: "profileEdit",
-        components: { default: ProfileEdit },
-      },
+      profile,
       {
         path: "/studio/:id",
         name: "studio",
