@@ -9,14 +9,12 @@ import Register from "../views/Register.vue";
 import GameProfile from "../views/GameProfile.vue";
 import GameEdit from "../views/GameEdit.vue";
 
-import StudioProfile from "../views/StudioProfile.vue";
-import StudioEdit from "../views/StudioEdit.vue";
-
 import Search from "../views/SearchPage.vue";
 import Series from "../views/SeriesProfile.vue";
 import SeriesEdit from "../views/SeriesEdit.vue";
 
 import profile from "./routes/profile";
+import studio from "./routes/studio";
 
 const routes = [
   {
@@ -25,16 +23,7 @@ const routes = [
     component: DashboardLayout,
     children: [
       profile,
-      {
-        path: "/studio/:id",
-        name: "studio",
-        components: { default: StudioProfile },
-      },
-      {
-        path: "/studioEdit/:id",
-        name: "studioEdit",
-        components: { default: StudioEdit },
-      },
+      studio,
       {
         path: "/game/:id",
         name: "game",
