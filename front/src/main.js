@@ -27,9 +27,9 @@ import { createPinia } from "pinia";
 const appInstance = createApp(App);
 const pinia = createPinia();
 appInstance.config.devtools = true;
+appInstance.use(pinia);
 appInstance.use(router);
 appInstance.use(ArgonDashboard);
-appInstance.use(pinia);
 
 appInstance.use(
   VueAxios,

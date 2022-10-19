@@ -1,6 +1,7 @@
 import Profile from "../../views/UserProfile.vue";
 import ProfileEdit from "../../views/UserProfileEdit.vue";
 import EmptyRoute from "../../layout/EmptyRoute.vue";
+import { userStore } from "@/stores/user";
 
 const profile = {
   path: "/profile/:id",
@@ -17,6 +18,9 @@ const profile = {
       components: { default: ProfileEdit },
     },
   ],
+  beforeEnter: (to) => {
+    return userStore().fetchProfileId(to.params.id);
+  },
 };
 
 export default profile;

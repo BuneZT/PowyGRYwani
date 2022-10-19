@@ -46,15 +46,15 @@
               </div>
               <div class="text-center">
                 <h3>
-                  {{ `${model.name} ${model.surname}` }} <br />
-                  <span class="font-weight-light">{{ model.email }}</span>
+                  {{ `${profile.name} ${profile.surname}` }} <br />
+                  <span class="font-weight-light">{{ profile.email }}</span>
                 </h3>
               </div>
 
               <div class="row float-right">
                 <router-link
                   v-if="canEdit()"
-                  :to="{ name: 'profileEdit', params: { id: model.id } }"
+                  :to="{ name: 'profileEdit', params: { id: profile.id } }"
                   class="btn btn-info mt-2"
                 >
                   Edytuj profil
@@ -68,31 +68,20 @@
   </div>
 </template>
 <script>
-import { isUser, isAdmin, getId } from "../components/authUtils";
+import { mapState } from "pinia";
+
+import { isUser, isAdmin, getId } from "@/components/authUtils";
+import { userStore } from "@/stores/user";
 
 export default {
-  data() {
-    return {
-      model: {
-        email: "",
-        name: "",
-        surname: "",
-      },
-    };
+  computed: {
+    ...mapState(userStore, ["profile"]),
   },
   methods: {
     isUser,
-    getProfile() {
-      this.axios.get(`/users/${this.$route.params.id}`).then((user) => {
-        this.model = { ...this.model, ...user.data };
-      });
-    },
     canEdit() {
       return isAdmin() || getId() == this.$route.params.id;
     },
-  },
-  created() {
-    this.getProfile();
   },
 };
 </script>
