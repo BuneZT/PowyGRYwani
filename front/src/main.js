@@ -20,16 +20,21 @@ import App from "./App.vue";
 import router from "./router";
 import ArgonDashboard from "./plugins/argon-dashboard";
 import "element-plus/lib/theme-chalk/index.css";
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+import axios from "axios";
+import VueAxios from "vue-axios";
+import { createPinia } from "pinia";
 
 const appInstance = createApp(App);
+const pinia = createPinia();
 appInstance.config.devtools = true;
 appInstance.use(router);
 appInstance.use(ArgonDashboard);
+appInstance.use(pinia);
 
-
-appInstance.use(VueAxios, axios.create({
+appInstance.use(
+  VueAxios,
+  axios.create({
     baseURL: process.env.VUE_APP_API_URL,
-}));
+  })
+);
 appInstance.mount("#app");
