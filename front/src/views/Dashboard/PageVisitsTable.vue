@@ -61,7 +61,7 @@
   </div>
 </template>
 <script>
-import { isUser } from "../../components/authUtils";
+import { isUser } from "../../utils/authUtils";
 
 export default {
   data() {

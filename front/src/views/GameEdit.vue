@@ -105,7 +105,7 @@
   </div>
 </template>
 <script>
-import { isAdmin } from "../components/authUtils";
+import { isAdmin } from "../utils/authUtils";
 export default {
   data() {
     return {

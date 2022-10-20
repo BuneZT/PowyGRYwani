@@ -15,7 +15,7 @@
   </div>
 </template>
 <script>
-import { randomString } from "./stringUtils";
+import { randomString } from "../utils/stringUtils";
 
 export default {
   name: "base-checkbox",

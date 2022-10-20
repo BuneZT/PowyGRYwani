@@ -64,7 +64,7 @@
   </div>
 </template>
 <script>
-import { getId, isAdmin } from "../components/authUtils";
+import { getId, isAdmin } from "../utils/authUtils";
 export default {
   name: "user-profile",
   data() {

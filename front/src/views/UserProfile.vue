@@ -70,7 +70,7 @@
 <script>
 import { mapState } from "pinia";
 
-import { isUser, isAdmin, getId } from "@/components/authUtils";
+import { isUser, isAdmin, getId } from "@/utils/authUtils";
 import { userStore } from "@/stores/user";
 
 export default {
