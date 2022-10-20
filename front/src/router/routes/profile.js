@@ -19,7 +19,7 @@ const profile = {
     },
   ],
   beforeEnter: (to) => {
-    return userStore().fetchProfileId(to.params.id);
+    return userStore().fetchProfile(to.params.id);
   },
 };
 

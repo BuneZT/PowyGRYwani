@@ -70,7 +70,7 @@
 <script>
 import { mapState } from "pinia";
 
-import { isUser, isAdmin, getId } from "@/utils/authUtils";
+import { isAdmin, getId } from "@/utils/authUtils";
 import { userStore } from "@/stores/user";
 
 export default {
@@ -78,7 +78,6 @@ export default {
     ...mapState(userStore, ["profile"]),
   },
   methods: {
-    isUser,
     canEdit() {
       return isAdmin() || getId() == this.$route.params.id;
     },

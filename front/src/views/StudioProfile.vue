@@ -92,24 +92,23 @@
   </div>
 </template>
 <script>
-import { isUser, isAdmin } from "../utils/authUtils";
+import { isUser, isAdmin } from "@/utils/authUtils";
+import { mapState } from "pinia";
+import { studioStore } from "@/stores/studio";
 
 export default {
   name: "studio-profile",
   data() {
     return {
-      model: {
-        name: "",
-        description: "",
-        games: [],
-      },
+      model: {},
     };
   },
+  computed: {
+    ...mapState(studioStore, ["studio"]),
+  },
   methods: {
-    getStudio() {
-      this.axios.get(`/studios/${this.$route.params.id}`).then((studio) => {
-        this.model = { ...this.model, ...studio.data };
-      });
+    fillModel() {
+      this.model = { ...this.studio };
     },
     deleteStudio() {
       if (confirm("Potwierdź usunięcie")) {
@@ -122,7 +121,7 @@ export default {
     isAdmin,
   },
   created() {
-    this.getStudio();
+    this.fillModel();
   },
 };
 </script>

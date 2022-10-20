@@ -2,9 +2,15 @@ import { defineStore } from "pinia";
 import axios from "@/utils/axios";
 
 export const userStore = defineStore("user", {
-  state: () => ({ profile: null }),
+  state: () => ({
+    profile: {
+      email: "",
+      name: "",
+      surname: "",
+    },
+  }),
   actions: {
-    fetchProfileId(id) {
+    fetchProfile(id) {
       return axios.get(`/users/${id}`).then((response) => {
         this.profile = response.data;
       });

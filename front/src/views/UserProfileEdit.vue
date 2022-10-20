@@ -73,11 +73,7 @@ export default {
   data() {
     return {
       userStore: userStore(),
-      model: {
-        email: "",
-        name: "",
-        surname: "",
-      },
+      model: {},
     };
   },
   computed: {
@@ -85,7 +81,7 @@ export default {
   },
   methods: {
     fillModel() {
-      this.model = { ...this.model, ...this.profile };
+      this.model = { ...this.profile };
     },
     submit() {
       this.axios.put(`/users/${this.$route.params.id}`, this.model).then(() => {
