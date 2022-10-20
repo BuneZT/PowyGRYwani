@@ -64,11 +64,15 @@
   </div>
 </template>
 <script>
-import { getId, isAdmin } from "../utils/authUtils";
+import { mapState } from "pinia";
+
+import { getId, isAdmin } from "@/utils/authUtils";
+import { userStore } from "@/stores/user";
 export default {
   name: "user-profile",
   data() {
     return {
+      userStore: userStore(),
       model: {
         email: "",
         name: "",
@@ -76,16 +80,17 @@ export default {
       },
     };
   },
-
+  computed: {
+    ...mapState(userStore, ["profile"]),
+  },
   methods: {
-    getProfile() {
-      this.axios.get(`/users/${this.$route.params.id}`).then((profile) => {
-        this.model = { ...this.model, ...profile.data };
-      });
+    fillModel() {
+      this.model = { ...this.model, ...this.profile };
     },
     submit() {
       this.axios.put(`/users/${this.$route.params.id}`, this.model).then(() => {
         alert("Profil zaktualizowany");
+        this.userStore.setProfile(this.model);
       });
     },
     checkAuth() {
@@ -97,7 +102,7 @@ export default {
 
   created() {
     this.checkAuth();
-    this.getProfile();
+    this.fillModel();
   },
 };
 </script>

@@ -1,15 +1,16 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import axios from "@/utils/axios";
 
 export const userStore = defineStore("user", {
   state: () => ({ profile: null }),
   actions: {
     fetchProfileId(id) {
-      return axios
-        .get(`http://localhost:80/api/users/${id}`)
-        .then((response) => {
-          this.profile = response.data;
-        });
+      return axios.get(`/users/${id}`).then((response) => {
+        this.profile = response.data;
+      });
+    },
+    setProfile(profile) {
+      this.profile = profile;
     },
   },
 });
