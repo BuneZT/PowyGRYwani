@@ -149,14 +149,6 @@ export default {
     getGame() {
       this.axios.get(`/games/${this.$route.params.id}`).then((game) => {
         this.model = { ...this.model, ...game.data };
-
-        this.axios.get(`/studios/${game.data.studio_id}`).then((studio) => {
-          this.model.studio = studio.data;
-        });
-
-        this.axios.get(`/series/${game.data.series_id}`).then((series) => {
-          this.model.series = series.data;
-        });
       });
     },
     deleteGame() {

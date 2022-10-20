@@ -19,6 +19,9 @@ const series = {
     },
   ],
   beforeEnter: (to) => {
+    if (to.params.id === "new") {
+      return true;
+    }
     return seriesStore().fetchSeries(to.params.id);
   },
 };

@@ -19,6 +19,9 @@ const studio = {
     },
   ],
   beforeEnter: (to) => {
+    if (to.params.id === "new") {
+      return true;
+    }
     return studioStore().fetchStudio(to.params.id);
   },
 };

@@ -38,6 +38,14 @@ namespace PowygrywaniApi.Controllers
                 return NotFound();
             }
 
+            if(game.Studio_id != null){
+                game.studio = await _context.studios.FindAsync(game.Studio_id);
+            }
+
+            if(game.Series_id != null){
+                game.series = await _context.series.FindAsync(game.Series_id);
+            }            
+
             return game;
         }
 
