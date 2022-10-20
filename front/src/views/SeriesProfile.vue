@@ -91,23 +91,23 @@
   </div>
 </template>
 <script>
-import { isUser, isAdmin } from "../utils/authUtils";
+import { mapState } from "pinia";
+
+import { isUser, isAdmin } from "@/utils/authUtils";
+import { seriesStore } from "@/stores/series";
 
 export default {
   data() {
     return {
-      model: {
-        name: "",
-        description: "",
-        games: [],
-      },
+      model: {},
     };
   },
+  computed: {
+    ...mapState(seriesStore, ["series"]),
+  },
   methods: {
-    getSeries() {
-      this.axios.get(`/series/${this.$route.params.id}`).then((series) => {
-        this.model = { ...this.model, ...series.data };
-      });
+    fillModel() {
+      this.model = { ...this.series };
     },
     deleteSeries() {
       if (confirm("Potwierdź usunięcie")) {
@@ -120,7 +120,7 @@ export default {
     isAdmin,
   },
   created() {
-    this.getSeries();
+    this.fillModel();
   },
 };
 </script>

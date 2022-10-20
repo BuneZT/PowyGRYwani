@@ -57,11 +57,15 @@
   </div>
 </template>
 <script>
-import { isAdmin } from "../utils/authUtils";
+import { mapState } from "pinia";
+
+import { isAdmin } from "@/utils/authUtils";
+import { seriesStore } from "@/stores/series";
 export default {
   name: "user-profile",
   data() {
     return {
+      seriesStore: seriesStore(),
       model: {
         name: "",
         description: "",
@@ -74,13 +78,12 @@ export default {
     isEdit() {
       return this.$route.params.id !== "new";
     },
+    ...mapState(seriesStore, ["series"]),
   },
 
   methods: {
-    getSeries() {
-      this.axios.get(`/series/${this.$route.params.id}`).then((series) => {
-        this.model = { ...this.model, ...series.data };
-      });
+    fillModel() {
+      this.model = { ...this.series };
     },
 
     submit() {
@@ -94,9 +97,11 @@ export default {
           .put(`/series/${this.$route.params.id}`, this.model)
           .then(() => {
             alert("Studio zaktualizowe");
+            this.seriesStore.setSeries(this.model);
           });
       } else {
         this.axios.post(`/series`, this.model).then((series) => {
+          this.seriesStore.setSeries(this.model);
           this.$router.push({ name: "series", params: { id: series.data.id } });
         });
       }
@@ -111,7 +116,7 @@ export default {
   created() {
     if (this.isEdit) {
       this.checkAuth();
-      this.getSeries();
+      this.fillModel();
     }
   },
 };
