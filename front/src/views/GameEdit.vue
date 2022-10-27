@@ -29,7 +29,7 @@
                       input-classes="form-control-alternative"
                       v-model="model.name"
                       :required="true"
-                      :error="this.model.name.length < 3 && nameError"
+                      :error="this.model.name?.length < 3 && nameError"
                     />
                   </div>
                   <div class="col-lg-6">
@@ -106,10 +106,13 @@
 </template>
 <script>
 import { isAdmin } from "../utils/authUtils";
+import { mapState } from "pinia";
+import { gameStore } from "@/stores/game";
 export default {
   data() {
     return {
-      // TODO  Get from API
+      gameStore: gameStore(),
+      // TODO  Get languages, platforms, tags from API
       languages: [
         { name: "PL", id: 25 },
         { name: "DE", id: 26 },
@@ -128,29 +131,25 @@ export default {
       series: [],
       nameError: "",
       model: {
-        name: "",
-        description: "",
-        studio_id: undefined,
-        series_id: undefined,
         languages_ids: [25, 26],
         platforms_ids: [43, 73],
         tags_ids: [73, 72],
       },
     };
   },
+
   computed: {
     isEdit() {
       return this.$route.params.id !== "new";
     },
+    ...mapState(gameStore, ["game"]),
   },
   methods: {
-    getGame() {
-      this.axios.get(`/games/${this.$route.params.id}`).then((game) => {
-        this.model = { ...this.model, ...game.data };
-      });
+    fillModel() {
+      this.model = { ...this.model, ...this.game };
     },
     submit() {
-      if (this.model.name.length < 3) {
+      if (this.model.name?.length < 3) {
         this.nameError = "Minimalna długość: 3";
         return;
       }
@@ -160,10 +159,10 @@ export default {
           .put(`/games/${this.$route.params.id}`, this.model)
           .then(() => {
             alert("Gra zaktualizowana");
+            this.gameStore.setGame(this.model);
           });
       } else {
         this.axios.post(`/games`, this.model).then((game) => {
-          console.log(game);
           this.$router.push({ name: "game", params: { id: game.data.id } });
         });
       }
@@ -186,7 +185,7 @@ export default {
   created() {
     if (this.isEdit) {
       this.checkAuth();
-      this.getGame();
+      this.fillModel();
     }
     this.getLists();
   },
