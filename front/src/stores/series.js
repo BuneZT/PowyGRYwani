@@ -11,7 +11,7 @@ export const seriesStore = defineStore("series", {
   actions: {
     fetchSeries(id) {
       return axios.get(`/series/${id}`).then((response) => {
-        this.series = response.data;
+        this.series = { ...this.series, ...response.data };
       });
     },
     setSeries(series) {

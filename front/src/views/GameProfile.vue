@@ -121,36 +121,24 @@
   </div>
 </template>
 <script>
-import { isUser, isAdmin } from "../utils/authUtils";
+import { isUser, isAdmin } from "@/utils/authUtils";
+import { mapState } from "pinia";
+import { gameStore } from "@/stores/game";
 export default {
   data() {
     return {
-      model: {
-        name: "[Brak]",
-        description: "[Brak]",
-        studio: { name: "[Brak]", id: "new" },
-        series: { name: "[Brak]", id: "new" },
-        languages: [
-          { name: "PL", id: "25" },
-          { name: "DE", id: "26" },
-        ],
-        platforms: [
-          { name: "PS3", id: "43" },
-          { name: "PC", id: "73" },
-        ],
-        tags: [
-          { name: "Mrok", id: "73" },
-          { name: "RPG", id: "72" },
-        ],
-      },
+      model: {},
     };
   },
+  computed: {
+    ...mapState(gameStore, ["game"]),
+  },
   methods: {
-    getGame() {
-      this.axios.get(`/games/${this.$route.params.id}`).then((game) => {
-        this.model = { ...this.model, ...game.data };
-      });
+    fillModel() {
+      this.model = { ...this.game };
+      console.log(this.game);
     },
+
     deleteGame() {
       if (confirm("Potwierdź usunięcie")) {
         this.axios.delete(`/games/${this.$route.params.id}`).then(() => {
@@ -162,7 +150,7 @@ export default {
     isAdmin,
   },
   created() {
-    this.getGame();
+    this.fillModel();
   },
 };
 </script>

@@ -12,7 +12,7 @@ export const studioStore = defineStore("studio", {
   actions: {
     fetchStudio(id) {
       return axios.get(`/studios/${id}`).then((response) => {
-        this.studio = response.data;
+        this.studio = { ...this.studio, ...response.data };
       });
     },
     setStudio(studio) {

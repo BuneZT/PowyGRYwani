@@ -12,7 +12,7 @@ export const userStore = defineStore("user", {
   actions: {
     fetchProfile(id) {
       return axios.get(`/users/${id}`).then((response) => {
-        this.profile = response.data;
+        this.profile = { ...this.profile, ...response.data };
       });
     },
     setProfile(profile) {
