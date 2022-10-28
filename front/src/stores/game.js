@@ -8,18 +8,6 @@ export const gameStore = defineStore("game", {
       description: "[Brak]",
       studio: { name: "[Brak]", id: "new" },
       game: { name: "[Brak]", id: "new" },
-      languages: [
-        { name: "PL", id: "25" },
-        { name: "DE", id: "26" },
-      ],
-      platforms: [
-        { name: "PS3", id: "43" },
-        { name: "PC", id: "73" },
-      ],
-      tags: [
-        { name: "Mrok", id: "73" },
-        { name: "RPG", id: "72" },
-      ],
     },
   }),
   actions: {

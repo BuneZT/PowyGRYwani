@@ -36,13 +36,6 @@
                 </div>
               </div>
               <div class="text-center">
-                <h2>
-                  {{ model.name }}
-                  <span class="font-weight-light">
-                    [{{ model.platforms.map((p) => p.name).join(",") }}]
-                  </span>
-                </h2>
-
                 <hr />
 
                 <h3>
@@ -55,20 +48,6 @@
                       {{ model.studio.name }}
                     </span>
                   </router-link>
-                </h3>
-
-                <h3>
-                  Języki:
-                  <span class="font-weight-light">
-                    {{ model.languages.map((p) => p.name).join(",") }}
-                  </span>
-                </h3>
-
-                <h3>
-                  Tagi:
-                  <span class="font-weight-light">
-                    {{ model.tags.map((p) => p.name).join(",") }}
-                  </span>
                 </h3>
 
                 <h3>
@@ -136,7 +115,6 @@ export default {
   methods: {
     fillModel() {
       this.model = { ...this.game };
-      console.log(this.game);
     },
 
     deleteGame() {

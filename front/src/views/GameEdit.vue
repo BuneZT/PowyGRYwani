@@ -51,35 +51,6 @@
                       @update="model.studio_id = $event"
                     />
                   </div>
-
-                  <div class="col-lg-6">
-                    <base-checkbox-form
-                      label="Język"
-                      :options="languages"
-                      :model="model.languages_ids"
-                      @update="model.languages_ids = $event"
-                    />
-                  </div>
-                </div>
-
-                <div class="row mt-3">
-                  <div class="col-lg-6">
-                    <base-checkbox-form
-                      label="Platforma"
-                      :options="platforms"
-                      :model="model.platforms_ids"
-                      @update="model.platforms_ids = $event"
-                    />
-                  </div>
-
-                  <div class="col-lg-6">
-                    <base-checkbox-form
-                      label="Tag"
-                      :options="tags"
-                      :model="model.tags_ids"
-                      @update="model.tags_ids = $event"
-                    />
-                  </div>
                 </div>
 
                 <div class="row">
@@ -112,29 +83,10 @@ export default {
   data() {
     return {
       gameStore: gameStore(),
-      // TODO  Get languages, platforms, tags from API
-      languages: [
-        { name: "PL", id: 25 },
-        { name: "DE", id: 26 },
-        { name: "CN", id: 27 },
-        { name: "ES", id: 28 },
-      ],
-      platforms: [
-        { name: "PS3", id: 43 },
-        { name: "PC", id: 73 },
-      ],
-      tags: [
-        { name: "Mrok", id: 73 },
-        { name: "RPG", id: 72 },
-      ],
       studios: [],
       series: [],
       nameError: "",
-      model: {
-        languages_ids: [25, 26],
-        platforms_ids: [43, 73],
-        tags_ids: [73, 72],
-      },
+      model: {},
     };
   },
 
@@ -163,6 +115,7 @@ export default {
           });
       } else {
         this.axios.post(`/games`, this.model).then((game) => {
+          this.gameStore.setGame(this.model);
           this.$router.push({ name: "game", params: { id: game.data.id } });
         });
       }
