@@ -78,10 +78,10 @@
 <script>
 import { mapState } from "pinia";
 
-import { isAdmin } from "@/utils/authUtils";
 import { gameStore } from "@/stores/game";
 import { studioStore } from "@/stores/studio";
 import { seriesStore } from "@/stores/series";
+import { authStore } from "@/stores/auth";
 export default {
   data() {
     return {
@@ -98,6 +98,7 @@ export default {
     ...mapState(gameStore, ["game"]),
     ...mapState(studioStore, ["studios"]),
     ...mapState(seriesStore, ["seriesList"]),
+    ...mapState(authStore, ["isAdmin"]),
   },
   methods: {
     fillModel() {
@@ -124,7 +125,7 @@ export default {
       }
     },
     checkAuth() {
-      if (!isAdmin()) {
+      if (!this.isAdmin) {
         this.$router.push({ name: "login" });
       }
     },

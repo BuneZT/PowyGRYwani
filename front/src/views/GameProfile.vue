@@ -80,7 +80,7 @@
                 </router-link>
 
                 <router-link
-                  v-if="isAdmin()"
+                  v-if="isAdmin"
                   :to="{ name: 'gameEdit', params: { id: model.id } }"
                   class="btn btn-info mt-2"
                 >
@@ -88,7 +88,7 @@
                 </router-link>
 
                 <button
-                  v-if="isAdmin()"
+                  v-if="isAdmin"
                   class="btn btn-danger mt-2"
                   @click="deleteGame"
                 >
@@ -103,9 +103,10 @@
   </div>
 </template>
 <script>
-import { isUser, isAdmin } from "@/utils/authUtils";
+import { isUser } from "@/utils/authUtils";
 import { mapState } from "pinia";
 import { gameStore } from "@/stores/game";
+import { authStore } from "@/stores/auth";
 export default {
   data() {
     return {
@@ -114,6 +115,7 @@ export default {
   },
   computed: {
     ...mapState(gameStore, ["game"]),
+    ...mapState(authStore, ["isAdmin"]),
   },
   methods: {
     fillModel() {
@@ -128,7 +130,6 @@ export default {
       }
     },
     isUser,
-    isAdmin,
   },
   created() {
     this.fillModel();

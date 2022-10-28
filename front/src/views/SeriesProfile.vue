@@ -68,7 +68,7 @@
                 </router-link>
 
                 <router-link
-                  v-if="isAdmin()"
+                  v-if="isAdmin"
                   :to="{ name: 'seriesEdit', params: { id: model.id } }"
                   class="btn btn-info mt-2"
                 >
@@ -76,7 +76,7 @@
                 </router-link>
 
                 <button
-                  v-if="isAdmin()"
+                  v-if="isAdmin"
                   class="btn btn-danger mt-2"
                   @click="deleteSeries"
                 >
@@ -93,8 +93,9 @@
 <script>
 import { mapState } from "pinia";
 
-import { isUser, isAdmin } from "@/utils/authUtils";
+import { isUser } from "@/utils/authUtils";
 import { seriesStore } from "@/stores/series";
+import { authStore } from "@/stores/auth";
 
 export default {
   data() {
@@ -104,6 +105,7 @@ export default {
   },
   computed: {
     ...mapState(seriesStore, ["series"]),
+    ...mapState(authStore, ["isAdmin"]),
   },
   methods: {
     fillModel() {
@@ -117,7 +119,6 @@ export default {
       }
     },
     isUser,
-    isAdmin,
   },
   created() {
     this.fillModel();

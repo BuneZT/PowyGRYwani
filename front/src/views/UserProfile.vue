@@ -53,7 +53,7 @@
 
               <div class="row float-right">
                 <router-link
-                  v-if="canEdit()"
+                  v-if="canEdit"
                   :to="{ name: 'profileEdit', params: { id: profile.id } }"
                   class="btn btn-info mt-2"
                 >
@@ -70,16 +70,18 @@
 <script>
 import { mapState } from "pinia";
 
-import { isAdmin, getId } from "@/utils/authUtils";
 import { userStore } from "@/stores/user";
+import { authStore } from "@/stores/auth";
 
 export default {
   computed: {
     ...mapState(userStore, ["profile"]),
-  },
-  methods: {
+    ...mapState(authStore, {
+      loggedUserProfile: "profile",
+      isAdmin: "isAdmin",
+    }),
     canEdit() {
-      return isAdmin() || getId() == this.$route.params.id;
+      return this.isAdmin || this.loggedUserProfile.id == this.$route.params.id;
     },
   },
 };

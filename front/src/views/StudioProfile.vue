@@ -69,7 +69,7 @@
                 </router-link>
 
                 <router-link
-                  v-if="isAdmin()"
+                  v-if="isAdmin"
                   :to="{ name: 'studioEdit', params: { id: model.id } }"
                   class="btn btn-info mt-2"
                 >
@@ -77,7 +77,7 @@
                 </router-link>
 
                 <button
-                  v-if="isAdmin()"
+                  v-if="isAdmin"
                   class="btn btn-danger mt-2"
                   @click="deleteStudio"
                 >
@@ -92,9 +92,10 @@
   </div>
 </template>
 <script>
-import { isUser, isAdmin } from "@/utils/authUtils";
+import { isUser } from "@/utils/authUtils";
 import { mapState } from "pinia";
 import { studioStore } from "@/stores/studio";
+import { authStore } from "@/stores/auth";
 
 export default {
   name: "studio-profile",
@@ -105,6 +106,7 @@ export default {
   },
   computed: {
     ...mapState(studioStore, ["studio"]),
+    ...mapState(authStore, ["isAdmin"]),
   },
   methods: {
     fillModel() {
@@ -118,7 +120,6 @@ export default {
       }
     },
     isUser,
-    isAdmin,
   },
   created() {
     this.fillModel();

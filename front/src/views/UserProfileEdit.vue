@@ -66,8 +66,8 @@
 <script>
 import { mapState } from "pinia";
 
-import { getId, isAdmin } from "@/utils/authUtils";
 import { userStore } from "@/stores/user";
+import { authStore } from "@/stores/auth";
 export default {
   name: "user-profile",
   data() {
@@ -78,6 +78,10 @@ export default {
   },
   computed: {
     ...mapState(userStore, ["profile"]),
+    ...mapState(authStore, {
+      loggedUserProfile: "profile",
+      isAdmin: "isAdmin",
+    }),
   },
   methods: {
     fillModel() {
@@ -90,7 +94,7 @@ export default {
       });
     },
     checkAuth() {
-      if (!isAdmin() && getId() != this.$route.params.id) {
+      if (!this.isAdmin && this.loggedUserProfile.id != this.$route.params.id) {
         this.$router.push({ name: "login" });
       }
     },
