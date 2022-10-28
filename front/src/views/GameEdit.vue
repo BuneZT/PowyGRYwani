@@ -36,7 +36,7 @@
                     <base-select
                       :model="model.series_id"
                       label="Seria"
-                      :options="series"
+                      :options="seriesList"
                       @update="model.series_id = $event"
                     />
                   </div>
@@ -76,15 +76,16 @@
   </div>
 </template>
 <script>
-import { isAdmin } from "../utils/authUtils";
 import { mapState } from "pinia";
+
+import { isAdmin } from "@/utils/authUtils";
 import { gameStore } from "@/stores/game";
+import { studioStore } from "@/stores/studio";
+import { seriesStore } from "@/stores/series";
 export default {
   data() {
     return {
       gameStore: gameStore(),
-      studios: [],
-      series: [],
       nameError: "",
       model: {},
     };
@@ -95,6 +96,8 @@ export default {
       return this.$route.params.id !== "new";
     },
     ...mapState(gameStore, ["game"]),
+    ...mapState(studioStore, ["studios"]),
+    ...mapState(seriesStore, ["seriesList"]),
   },
   methods: {
     fillModel() {
@@ -120,14 +123,6 @@ export default {
         });
       }
     },
-    getLists() {
-      this.axios.get(`/studios`).then((studios) => {
-        this.studios = studios.data;
-      });
-      this.axios.get(`/series`).then((series) => {
-        this.series = series.data;
-      });
-    },
     checkAuth() {
       if (!isAdmin()) {
         this.$router.push({ name: "login" });
@@ -140,7 +135,6 @@ export default {
       this.checkAuth();
       this.fillModel();
     }
-    this.getLists();
   },
 };
 </script>
