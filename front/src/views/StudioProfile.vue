@@ -61,7 +61,7 @@
 
               <div class="row float-right">
                 <router-link
-                  v-if="isUser()"
+                  v-if="isUser"
                   :to="{ name: 'studioEdit', params: { id: 'new' } }"
                   class="btn btn-primary mt-2"
                 >
@@ -69,7 +69,7 @@
                 </router-link>
 
                 <router-link
-                  v-if="isAdmin()"
+                  v-if="isAdmin"
                   :to="{ name: 'studioEdit', params: { id: model.id } }"
                   class="btn btn-info mt-2"
                 >
@@ -77,7 +77,7 @@
                 </router-link>
 
                 <button
-                  v-if="isAdmin()"
+                  v-if="isAdmin"
                   class="btn btn-danger mt-2"
                   @click="deleteStudio"
                 >
@@ -92,24 +92,24 @@
   </div>
 </template>
 <script>
-import { isUser, isAdmin } from "../components/authUtils";
+import { mapState } from "pinia";
+import { studioStore } from "@/stores/studio";
+import { authStore } from "@/stores/auth";
 
 export default {
   name: "studio-profile",
   data() {
     return {
-      model: {
-        name: "",
-        description: "",
-        games: [],
-      },
+      model: {},
     };
   },
+  computed: {
+    ...mapState(studioStore, ["studio"]),
+    ...mapState(authStore, ["isAdmin", "isUser"]),
+  },
   methods: {
-    getStudio() {
-      this.axios.get(`/studios/${this.$route.params.id}`).then((studio) => {
-        this.model = { ...this.model, ...studio.data };
-      });
+    fillModel() {
+      this.model = { ...this.studio };
     },
     deleteStudio() {
       if (confirm("Potwierdź usunięcie")) {
@@ -118,11 +118,9 @@ export default {
         });
       }
     },
-    isUser,
-    isAdmin,
   },
   created() {
-    this.getStudio();
+    this.fillModel();
   },
 };
 </script>

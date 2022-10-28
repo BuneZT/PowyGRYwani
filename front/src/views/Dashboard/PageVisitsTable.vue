@@ -8,7 +8,7 @@
 
         <div class="col d-flex justify-content-end">
           <router-link
-            v-if="isUser()"
+            v-if="isUser"
             :to="{ name: 'gameEdit', params: { id: 'new' } }"
             class="btn btn-sm btn-primary"
           >
@@ -16,7 +16,7 @@
           </router-link>
 
           <router-link
-            v-if="isUser()"
+            v-if="isUser"
             :to="{ name: 'studioEdit', params: { id: 'new' } }"
             class="btn btn-sm btn-primary"
           >
@@ -24,7 +24,7 @@
           </router-link>
 
           <router-link
-            v-if="isUser()"
+            v-if="isUser"
             :to="{ name: 'seriesEdit', params: { id: 'new' } }"
             class="btn btn-sm btn-primary"
           >
@@ -53,7 +53,7 @@
             </router-link>
           </th>
           <td>
-            {{ transalteType(row.item.type) }}
+            {{ translateType(row.item.type) }}
           </td>
         </template>
       </base-table>
@@ -61,7 +61,8 @@
   </div>
 </template>
 <script>
-import { isUser } from "../../components/authUtils";
+import { mapState } from "pinia";
+import { authStore } from "@/stores/auth";
 
 export default {
   data() {
@@ -69,14 +70,16 @@ export default {
       tableData: [],
     };
   },
+  computed: {
+    ...mapState(authStore, ["isUser"]),
+  },
   methods: {
-    isUser,
     getSearch() {
       this.axios.get(`/search/${this.$route.query.query}`).then((search) => {
         this.tableData = search.data;
       });
     },
-    transalteType(type) {
+    translateType(type) {
       if (type === "studio") {
         return "Studio";
       } else if (type === "game") {

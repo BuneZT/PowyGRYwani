@@ -64,32 +64,37 @@
   </div>
 </template>
 <script>
-import { getId, isAdmin } from "../components/authUtils";
+import { mapState } from "pinia";
+
+import { userStore } from "@/stores/user";
+import { authStore } from "@/stores/auth";
 export default {
   name: "user-profile",
   data() {
     return {
-      model: {
-        email: "",
-        name: "",
-        surname: "",
-      },
+      userStore: userStore(),
+      model: {},
     };
   },
-
+  computed: {
+    ...mapState(userStore, ["profile"]),
+    ...mapState(authStore, {
+      loggedUserProfile: "profile",
+      isAdmin: "isAdmin",
+    }),
+  },
   methods: {
-    getProfile() {
-      this.axios.get(`/users/${this.$route.params.id}`).then((profile) => {
-        this.model = { ...this.model, ...profile.data };
-      });
+    fillModel() {
+      this.model = { ...this.profile };
     },
     submit() {
       this.axios.put(`/users/${this.$route.params.id}`, this.model).then(() => {
         alert("Profil zaktualizowany");
+        this.userStore.setProfile(this.model);
       });
     },
     checkAuth() {
-      if (!isAdmin() && getId() != this.$route.params.id) {
+      if (!this.isAdmin && this.loggedUserProfile.id != this.$route.params.id) {
         this.$router.push({ name: "login" });
       }
     },
@@ -97,7 +102,7 @@ export default {
 
   created() {
     this.checkAuth();
-    this.getProfile();
+    this.fillModel();
   },
 };
 </script>

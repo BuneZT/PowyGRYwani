@@ -1,7 +1,7 @@
 <template>
   <label class="form-control-label">{{ label }}</label>
   <select class="form-control form-control-alternative" v-model="localModel">
-    <option v-for="option in options" :key="option.id">
+    <option v-for="option in options" :value="option.id" :key="option.id">
       {{ option.name }}
     </option>
   </select>
@@ -18,26 +18,18 @@ export default {
   },
   data() {
     return {
-      localModel: "",
+      localModel: null,
     };
-  },
-  computed: {
-    modelValue() {
-      return this.options.find((o) => o.id === this.model)?.name;
-    },
   },
   watch: {
     localModel(val) {
-      if (val !== this.modelValue) {
-        this.$emit(
-          "update",
-          this.options.find((o) => o.name === this.localModel)?.id
-        );
+      if (val !== this.model) {
+        this.$emit("update", this.model);
       }
     },
-    modelValue() {
-      this.localModel = this.modelValue;
-    },
+  },
+  mounted() {
+    this.localModel = this.model;
   },
 };
 </script>

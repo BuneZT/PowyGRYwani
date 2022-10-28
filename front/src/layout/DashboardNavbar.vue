@@ -53,7 +53,7 @@
           <div class="dropdown-header noti-title">
             <h6 class="text-overflow m-0">Witaj!</h6>
           </div>
-          <router-link :to="`/profile/${id}`" class="dropdown-item">
+          <router-link :to="`/profile/${profile.id}`" class="dropdown-item">
             <i class="ni ni-single-02"></i>
             <span>Mój profil</span>
           </router-link>
@@ -68,14 +68,16 @@
   </base-nav>
 </template>
 <script>
+import { mapState } from "pinia";
+import { authStore } from "@/stores/auth";
+
 export default {
   data() {
     return {
+      authStore: authStore(),
       activeNotifications: false,
       showMenu: false,
       searchQuery: "",
-      displayName: "",
-      userId: "",
     };
   },
   methods: {
@@ -85,28 +87,19 @@ export default {
     toggleSidebar() {
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
     },
-    hideSidebar() {
-      this.$sidebar.displaySidebar(false);
-    },
-    toggleMenu() {
-      this.showMenu = !this.showMenu;
-    },
+
     logout() {
-      localStorage.setItem("name", "");
-      localStorage.setItem("surname", "");
-      localStorage.setItem("id", null);
-      localStorage.setItem("isAdmin", false);
+      this.authStore.logout();
       this.$router.push({ name: "login" });
     },
   },
-  created() {
-    const name = localStorage.getItem("name");
-    const surname = localStorage.getItem("surname");
-    this.id = localStorage.getItem("id");
-
-    if (name && surname) {
-      this.displayName = `${name} ${surname}`;
-    }
+  computed: {
+    displayName() {
+      return this.profile.id
+        ? `${this.profile.name} ${this.profile.surname}`
+        : "";
+    },
+    ...mapState(authStore, ["profile"]),
   },
 };
 </script>

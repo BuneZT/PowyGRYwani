@@ -29,14 +29,14 @@
                       input-classes="form-control-alternative"
                       v-model="model.name"
                       :required="true"
-                      :error="this.model.name.length < 3 && nameError"
+                      :error="this.model.name?.length < 3 && nameError"
                     />
                   </div>
                   <div class="col-lg-6">
                     <base-select
                       :model="model.series_id"
                       label="Seria"
-                      :options="series"
+                      :options="seriesList"
                       @update="model.series_id = $event"
                     />
                   </div>
@@ -49,35 +49,6 @@
                       label="Studio"
                       :options="studios"
                       @update="model.studio_id = $event"
-                    />
-                  </div>
-
-                  <div class="col-lg-6">
-                    <base-checkbox-form
-                      label="Język"
-                      :options="languages"
-                      :model="model.languages_ids"
-                      @update="model.languages_ids = $event"
-                    />
-                  </div>
-                </div>
-
-                <div class="row mt-3">
-                  <div class="col-lg-6">
-                    <base-checkbox-form
-                      label="Platforma"
-                      :options="platforms"
-                      :model="model.platforms_ids"
-                      @update="model.platforms_ids = $event"
-                    />
-                  </div>
-
-                  <div class="col-lg-6">
-                    <base-checkbox-form
-                      label="Tag"
-                      :options="tags"
-                      :model="model.tags_ids"
-                      @update="model.tags_ids = $event"
                     />
                   </div>
                 </div>
@@ -105,52 +76,36 @@
   </div>
 </template>
 <script>
-import { isAdmin } from "../components/authUtils";
+import { mapState } from "pinia";
+
+import { gameStore } from "@/stores/game";
+import { studioStore } from "@/stores/studio";
+import { seriesStore } from "@/stores/series";
+import { authStore } from "@/stores/auth";
 export default {
   data() {
     return {
-      // TODO  Get from API
-      languages: [
-        { name: "PL", id: 25 },
-        { name: "DE", id: 26 },
-        { name: "CN", id: 27 },
-        { name: "ES", id: 28 },
-      ],
-      platforms: [
-        { name: "PS3", id: 43 },
-        { name: "PC", id: 73 },
-      ],
-      tags: [
-        { name: "Mrok", id: 73 },
-        { name: "RPG", id: 72 },
-      ],
-      studios: [],
-      series: [],
+      gameStore: gameStore(),
       nameError: "",
-      model: {
-        name: "",
-        description: "",
-        studio_id: undefined,
-        series_id: undefined,
-        languages_ids: [25, 26],
-        platforms_ids: [43, 73],
-        tags_ids: [73, 72],
-      },
+      model: {},
     };
   },
+
   computed: {
     isEdit() {
       return this.$route.params.id !== "new";
     },
+    ...mapState(gameStore, ["game"]),
+    ...mapState(studioStore, ["studios"]),
+    ...mapState(seriesStore, ["seriesList"]),
+    ...mapState(authStore, ["isAdmin"]),
   },
   methods: {
-    getGame() {
-      this.axios.get(`/games/${this.$route.params.id}`).then((game) => {
-        this.model = { ...this.model, ...game.data };
-      });
+    fillModel() {
+      this.model = { ...this.model, ...this.game };
     },
     submit() {
-      if (this.model.name.length < 3) {
+      if (this.model.name?.length < 3) {
         this.nameError = "Minimalna długość: 3";
         return;
       }
@@ -160,24 +115,17 @@ export default {
           .put(`/games/${this.$route.params.id}`, this.model)
           .then(() => {
             alert("Gra zaktualizowana");
+            this.gameStore.setGame(this.model);
           });
       } else {
         this.axios.post(`/games`, this.model).then((game) => {
-          console.log(game);
+          this.gameStore.setGame(this.model);
           this.$router.push({ name: "game", params: { id: game.data.id } });
         });
       }
     },
-    getLists() {
-      this.axios.get(`/studios`).then((studios) => {
-        this.studios = studios.data;
-      });
-      this.axios.get(`/series`).then((series) => {
-        this.series = series.data;
-      });
-    },
     checkAuth() {
-      if (!isAdmin()) {
+      if (!this.isAdmin) {
         this.$router.push({ name: "login" });
       }
     },
@@ -186,9 +134,8 @@ export default {
   created() {
     if (this.isEdit) {
       this.checkAuth();
-      this.getGame();
+      this.fillModel();
     }
-    this.getLists();
   },
 };
 </script>

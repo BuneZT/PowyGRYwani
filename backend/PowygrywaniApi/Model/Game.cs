@@ -11,5 +11,9 @@ namespace PowygrywaniApi.Model
         public string? Description { get; set; }
         public int? Studio_id { get; set; }
         public int? Series_id { get; set; }
+        public Studio? studio { get; set; }
+        public Series? series { get; set; }
+
+
     }
 }

@@ -60,7 +60,7 @@
 
               <div class="row float-right">
                 <router-link
-                  v-if="isUser()"
+                  v-if="isUser"
                   :to="{ name: 'seriesEdit', params: { id: 'new' } }"
                   class="btn btn-primary mt-2"
                 >
@@ -68,7 +68,7 @@
                 </router-link>
 
                 <router-link
-                  v-if="isAdmin()"
+                  v-if="isAdmin"
                   :to="{ name: 'seriesEdit', params: { id: model.id } }"
                   class="btn btn-info mt-2"
                 >
@@ -76,7 +76,7 @@
                 </router-link>
 
                 <button
-                  v-if="isAdmin()"
+                  v-if="isAdmin"
                   class="btn btn-danger mt-2"
                   @click="deleteSeries"
                 >
@@ -91,23 +91,24 @@
   </div>
 </template>
 <script>
-import { isUser, isAdmin } from "../components/authUtils";
+import { mapState } from "pinia";
+
+import { seriesStore } from "@/stores/series";
+import { authStore } from "@/stores/auth";
 
 export default {
   data() {
     return {
-      model: {
-        name: "",
-        description: "",
-        games: [],
-      },
+      model: {},
     };
   },
+  computed: {
+    ...mapState(seriesStore, ["series"]),
+    ...mapState(authStore, ["isAdmin", "isUser"]),
+  },
   methods: {
-    getSeries() {
-      this.axios.get(`/series/${this.$route.params.id}`).then((series) => {
-        this.model = { ...this.model, ...series.data };
-      });
+    fillModel() {
+      this.model = { ...this.series };
     },
     deleteSeries() {
       if (confirm("Potwierdź usunięcie")) {
@@ -116,11 +117,9 @@ export default {
         });
       }
     },
-    isUser,
-    isAdmin,
   },
   created() {
-    this.getSeries();
+    this.fillModel();
   },
 };
 </script>
