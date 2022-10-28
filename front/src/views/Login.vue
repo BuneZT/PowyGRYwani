@@ -40,6 +40,8 @@
   </div>
 </template>
 <script>
+import { authStore } from "@/stores/auth";
+
 export default {
   data() {
     return {
@@ -47,20 +49,16 @@ export default {
         email: "",
         password: "",
       },
+      authStore: authStore(),
     };
   },
   methods: {
     login() {
-      this.axios
-        .get(`/users/${this.model.email}/${this.model.password}`)
-        .then((user) => {
-          localStorage.setItem("name", user.data.name);
-          localStorage.setItem("surname", user.data.surname);
-          localStorage.setItem("isAdmin", user.data.isAdmin);
-          localStorage.setItem("id", user.data.id);
-
-          this.$router.push({ name: "profile", params: { id: user.data.id } });
-        })
+      this.authStore
+        .login(this.model.email, this.model.password)
+        .then((user) =>
+          this.$router.push({ name: "profile", params: { id: user.id } })
+        )
         .catch(() => {
           alert("Zły login lub hasło");
         });
