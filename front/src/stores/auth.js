@@ -2,16 +2,18 @@ import { defineStore } from "pinia";
 
 import axios from "@/utils/axios";
 
+const emptyProfile = {
+  surname: "",
+  email: "",
+  password: "",
+  isAdmin: false,
+  name: "",
+  id: null,
+};
+
 export const authStore = defineStore("auth", {
   state: () => ({
-    profile: {
-      surname: "",
-      email: "",
-      password: "",
-      isAdmin: false,
-      name: "",
-      id: null,
-    },
+    profile: emptyProfile,
   }),
   actions: {
     login(login, password) {
@@ -19,6 +21,9 @@ export const authStore = defineStore("auth", {
         this.profile = { ...this.profile, ...response.data };
         return response.data;
       });
+    },
+    logout() {
+      this.profile = emptyProfile;
     },
   },
   getters: {
