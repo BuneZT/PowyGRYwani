@@ -36,6 +36,9 @@
                 </div>
               </div>
               <div class="text-center">
+                <h2>
+                  {{ model.name }}
+                </h2>
                 <hr />
 
                 <h3>
