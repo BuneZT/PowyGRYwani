@@ -60,7 +60,7 @@
 
               <div class="row float-right">
                 <router-link
-                  v-if="isUser()"
+                  v-if="isUser"
                   :to="{ name: 'seriesEdit', params: { id: 'new' } }"
                   class="btn btn-primary mt-2"
                 >
@@ -93,7 +93,6 @@
 <script>
 import { mapState } from "pinia";
 
-import { isUser } from "@/utils/authUtils";
 import { seriesStore } from "@/stores/series";
 import { authStore } from "@/stores/auth";
 
@@ -105,7 +104,7 @@ export default {
   },
   computed: {
     ...mapState(seriesStore, ["series"]),
-    ...mapState(authStore, ["isAdmin"]),
+    ...mapState(authStore, ["isAdmin", "isUser"]),
   },
   methods: {
     fillModel() {
@@ -118,7 +117,6 @@ export default {
         });
       }
     },
-    isUser,
   },
   created() {
     this.fillModel();
